@@ -1,0 +1,33 @@
+name: nightly builds
+on:
+  push:
+    branches:
+      - 1.21.1
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4.6.0
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Run chmod to make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Setup
+        uses: gradle/actions/setup-gradle@v4
+      - name: Clean and setup
+        run: ./gradlew clean setup
+      - name: Datagen
+        run: ./gradlew :runData
+      - name: Build jar
+        run: ./gradlew build
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4.5.0
+        with:
+          name: dimdelvers-${{github.sha}}
+          path: build/libs/dimensiondelvers*.jar
