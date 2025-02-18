@@ -18,10 +18,8 @@ jobs:
         run: chmod +x ./gradlew
       - name: Setup
         uses: gradle/actions/setup-gradle@v4
-      - name: Clean
-        run: ./gradlew clean
       - name: Datagen
-        run: ./gradlew :runData
+        run: ./gradlew runData
       - name: Build jar
         run: ./gradlew build
       - name: Upload Artifact
