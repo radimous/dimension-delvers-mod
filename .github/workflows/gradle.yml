@@ -37,12 +37,14 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: Artifacts
-
+          name: dimdelvers-${{github.sha}}
+      - name: Display structure of downloaded files
+        run: ls -R
+        
       - name: Setup Environment Variables
         run: |
           echo "MINECRAFT_VERSION=$(grep '^minecraft_version =' gradle.properties | cut -d'=' -f2 | tr -d ' ')" >> "$GITHUB_ENV"
-      - name: Move Test Mod and Flywheel into run/mods
+      - name: Move Dimension Delvers mod into run/mods
         run: |
           mkdir -p run/mods
           cp /build/libs/dimensiondelvers*.jar run/mods
