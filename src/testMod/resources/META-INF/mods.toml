@@ -1,0 +1,8 @@
+modLoader = "javafml"
+loaderVersion = "[0,)"
+license = "${mod_license}"
+
+[[mods]]
+modId = "dimensiondelvers_testmod"
+version = "1.0.0"
+displayName = "Dimension Delvers Test Mod"

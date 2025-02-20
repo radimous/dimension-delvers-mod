@@ -89,6 +89,12 @@ neoForge {
         "${mod_id}" {
             sourceSet(sourceSets.main)
         }
+        "${mod_id}_testmod" {
+            sourceSet(sourceSets.create("testMod"){
+                compileClasspath += sourceSets.main.compileClasspath
+                runtimeClasspath += sourceSets.main.runtimeClasspath
+            })
+        }
     }
 }
 

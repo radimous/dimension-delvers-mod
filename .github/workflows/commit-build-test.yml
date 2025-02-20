@@ -55,7 +55,7 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
       
-      - name: Move Dimension Delvers mod into run/mods
+      - name: Copy Dimension Delvers and test mod into run/mods
         run: |
           mkdir -p run/mods
           cp dimensiondelvers*.jar run/mods
