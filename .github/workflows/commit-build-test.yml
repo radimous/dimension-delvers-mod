@@ -9,24 +9,37 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        
       - name: Setup Java
         uses: actions/setup-java@v4.6.0
         with:
           java-version: '21'
           distribution: 'temurin'
-      - name: Run chmod to make gradlew executable
+          
+      - name: Make gradlew executable
         run: chmod +x ./gradlew
-      - name: Setup
+        
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+        
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
       - name: Datagen
         run: ./gradlew runData
+        
       - name: Build jar
         run: ./gradlew build
+        
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.5.0
         with:
           name: dimdelvers-${{github.sha}}
           path: build/libs/dimensiondelvers*.jar
+  
+  
   runtime-test:
     needs: build
     runs-on: ubuntu-latest
@@ -38,21 +51,20 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dimdelvers-${{github.sha}}
+      
       - name: Display structure of downloaded files
         run: ls -R
-        
-      - name: Setup Environment Variables
-        run: |
-          echo "MINECRAFT_VERSION=$(grep '^minecraft_version =' gradle.properties | cut -d'=' -f2 | tr -d ' ')" >> "$GITHUB_ENV"
+      
       - name: Move Dimension Delvers mod into run/mods
         run: |
           mkdir -p run/mods
           cp dimensiondelvers*.jar run/mods
       # Lock to a specific commit, it would be bad if the tag is re-pushed with unwanted changes
+      
       - name: Run the MC client
         uses: 3arthqu4ke/mc-runtime-test@e72f8fe1134aabf6fc749a2a8c09bb56dd7d283e
         with:
-          mc: ${{ env.MINECRAFT_VERSION }}
+          mc: 1.21.4
           modloader: neoforge
           regex: .*neoforge.*
           mc-runtime-test: none
